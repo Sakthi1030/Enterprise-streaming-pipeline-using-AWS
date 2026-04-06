@@ -1,387 +1,262 @@
 # Enterprise Streaming Pipeline using AWS
 
-A comprehensive real-time data streaming and analytics platform built with AWS services, Apache Airflow, Snowflake, and agentic AI. This project demonstrates a complete data engineering solution with infrastructure as code, data generation, orchestration, and intelligent analytics capabilities.
-
-## 📋 Table of Contents
-
-- [Architecture Overview](#architecture-overview)
-- [Project Phases](#project-phases)
-- [Tools & Technologies](#tools--technologies)
-- [Prerequisites](#prerequisites)
-- [Quick Start](#quick-start)
-- [Project Structure](#project-structure)
-- [Configuration](#configuration)
-- [Deployment](#deployment)
-- [Contributing](#contributing)
+A comprehensive end-to-end real-time data streaming and analytics pipeline on AWS with agentic AI capabilities. This project demonstrates enterprise-grade infrastructure, data orchestration, analytics, and intelligent automation.
 
 ## 🏗️ Architecture Overview
 
-The pipeline follows a multi-phase architecture:
+The pipeline consists of 7 phases:
 
-```
-Data Generation → AWS Kinesis → S3 → Airflow ETL → Snowflake → Agentic AI Analytics → API → Kubernetes
-```
+1. **AWS Infrastructure** - Terraform IaC and IAM configuration
+2. **Real-time Data Generation** - Synthetic data streaming to AWS Kinesis
+3. **Airflow Orchestration** - Data pipeline orchestration with Docker
+4. **Snowflake Analytics** - Data warehouse and SQL transformations
+5. **Agentic AI** - Multi-agent AI system for intelligent analysis
+6. **Kubernetes Deployment** - Container orchestration and monitoring
+7. **Power BI** - Business intelligence dashboards
 
-This creates a complete data flow from real-time streaming to AI-driven insights.
+## 🛠️ Tools & Technologies Used
 
-## 📊 Project Phases
+### **Cloud Platform**
+- **AWS** - Core cloud provider
+  - S3 - Data storage and data lake
+  - Kinesis - Real-time data streaming
+  - IAM - Identity and access management
+  - EC2/ECS - Compute resources
 
-### Phase 1: AWS Infrastructure (`phase_1_aws_infra/`)
-- **Terraform Configuration**: Infrastructure as Code for AWS setup
-- **IAM Policies**: Security policies for ECS tasks and services
-- **PowerShell Scripts**: Automated AWS environment setup
-- **Key Components**: 
-  - Kinesis Data Streams
-  - S3 Buckets
-  - Lambda Functions
-  - ECS for containerized workloads
+### **Infrastructure as Code**
+- **Terraform** - Infrastructure provisioning and management
+- **PowerShell** - AWS automation scripts
 
-### Phase 2: Data Generation (`phase_2_data_generation/`)
-- **Master Data Generation**: Create base datasets (customers, products, stores, sales reps, campaigns)
-- **Transaction Generation**: Real-time transaction data generation
-- **Stream to Kinesis**: Push data to AWS Kinesis streams
-- **Data Formats**: CSV, JSON, Parquet files
-- **Generated Data**:
-  - Customers dataset
-  - Products catalog
-  - Sales representatives
-  - Marketing campaigns
-  - Store locations
-  - Real-time transactions
+### **Data Integration & Streaming**
+- **AWS Kinesis** - Real-time data ingestion
+- **Apache Airflow** - Workflow orchestration and scheduling
+- **Python** - Data pipelines and ETL
 
-### Phase 3: Airflow Orchestration (`phase_3_airflow_orchestration/`)
-- **DAG Pipelines**:
-  - `data_generation_dag.py`: Triggers data generation tasks
-  - `kinesis_to_s3_dag.py`: Streams data from Kinesis to S3
-  - `s3_to_snowflake_dag.py`: Loads data from S3 to Snowflake
-  - `agentic_ai_trigger_dag.py`: Triggers AI analytics on processed data
+### **Data Warehouse**
+- **Snowflake** - Cloud data warehouse
+- **SQL** - Data transformation and analytics
 
-- **Docker Setup**:
-  - Dockerfile with all dependencies
-  - Docker Compose for multi-container orchestration
-  - Custom Airflow environment configuration
-  - Entry point scripts
+### **Container & Orchestration**
+- **Docker** - Containerization
+  - Docker Compose - Multi-container orchestration
+- **Kubernetes** - Production container orchestration
+  - Prometheus - Metrics collection
+  - Grafana - Monitoring and visualization
+  - Horizontal Pod Autoscaler (HPA) - Request-based auto-scaling
 
-- **Custom Operators**: Extended Airflow operators for specialized tasks
+### **Agentic AI & LLMs**
+- **Python** - AI/ML implementation
+- **LangChain** - LLM framework (implied by agent architecture)
+- **Vector Store** - Embeddings and semantic search
+- **Agents**:
+  - Root Agent - Main orchestrator
+  - Sales Agent - Sales analytics and insights
+  - Marketing Agent - Marketing campaign analysis
+  - Anomaly Agent - Anomaly detection and alerting
 
-### Phase 4: Snowflake Data Warehouse (`phase_4_snowflake/`)
-- **Schema Deployment**: Star schema for dimensional modeling
-- **Database Setup**: Create warehouse, databases, and schemas
-- **Tables**: COPY_INTO operations for data loading
-- **SQL Views**: Dimensional views for analytics
-- **Snowflake Hooks**: Custom Airflow integration with Snowflake
+### **APIs & Backend**
+- **FastAPI** - RESTful API framework
+- **Pydantic** - Data validation and schema management
 
-### Phase 5: Agentic AI (`phase_5_agentic_ai/`)
-- **Multi-Agent System**:
-  - `root_agent.py`: Main orchestrator
-  - `sales_agent.py`: Sales analytics and insights
-  - `marketing_agent.py`: Marketing campaign analysis
-  - `anomaly_agent.py`: Anomaly detection and alerts
+### **Business Intelligence**
+- **Power BI** - Interactive dashboards and reporting
+- **Snowflake Connector** - Direct data integration
 
-- **AI Capabilities**:
-  - Snowflake query tools
-  - Report generation
-  - Alert generation
-  - Vector store for embeddings
-  - REST API for agent interactions
+### **Version Control**
+- **Git** - Source code management
+- **GitHub** - Repository hosting
 
-- **API Endpoints**: FastAPI-based agent interface
-- **Vector Memory**: Embedding-based knowledge store
+### **Development & Environment Management**
+- **Python 3.13** - Programming language
+- **pip/venv** - Python dependency management
+- **YAML** - Configuration management
 
-### Phase 6: Kubernetes Deployment (`phase_6_kubernetes/`)
-- **Namespaces**: Separate namespaces for different services
-- **Deployments**:
-  - Agentic AI deployment with replicas
-  - Airflow deployment configuration
-  - Service definitions for inter-pod communication
-
-- **Scaling**: Horizontal Pod Autoscaler (HPA) for dynamic scaling
-- **Monitoring**: Prometheus and Grafana integration
-
-### Phase 7: Power BI Integration (`phase_7_powerbi/`)
-- **Snowflake Connection**: Direct connection to Snowflake data warehouse
-- **Dashboards**: Business intelligence visualizations
-- **Semantic Model**: Data model for Power BI
-- **Refresh Schedule**: Automated data refresh configuration
-
-## 🛠️ Tools & Technologies
-
-### Cloud Platform
-- **AWS** (Amazon Web Services)
-  - Kinesis: Real-time data streaming
-  - S3: Data lake storage
-  - Lambda: Serverless computing
-  - ECS: Container orchestration
-  - IAM: Identity and Access Management
-
-### Data Engineering & Orchestration
-- **Apache Airflow**: Workflow orchestration and scheduling
-- **Docker**: Containerization
-- **Docker Compose**: Multi-container orchestration
-
-### Infrastructure as Code
-- **Terraform**: Infrastructure provisioning and management
-- **PowerShell**: Scripting and automation
-
-### Data Warehouse
-- **Snowflake**: Cloud data warehouse
-  - SQL for querying
-  - Schema design and optimization
-  - Data sharing capabilities
-
-### AI & Machine Learning
-- **LangChain/Claude API**: Agentic AI framework
-- **Embeddings**: Vector store for similarity search
-- **Multi-Agent Systems**: Specialized agents for different domains
-
-### API & Web Framework
-- **FastAPI**: High-performance REST API
-- **Pydantic**: Data validation
-
-### Business Intelligence
-- **Power BI**: Dashboard and visualization tool
-- **Semantic Models**: Data modeling for BI
-
-### Container Orchestration
-- **Kubernetes**: Container orchestration platform
-  - Horizontal Pod Autoscaler (HPA)
-  - Namespace management
-  - Service discovery
-
-### Monitoring & Observability
-- **Prometheus**: Metrics collection
-- **Grafana**: Metrics visualization and alerting
-
-### Programming Languages
-- **Python 3.13**: Main programming language
-- **SQL**: Data warehouse queries
-- **HCL/Terraform**: Infrastructure definition
-- **YAML**: Configuration management
-- **JSON**: Data interchange format
-
-### Data Formats
-- **CSV**: Structured tabular data
-- **JSON**: Semi-structured data
-- **Parquet**: Columnar storage format
-- **Avro**: Serialization format for streaming
-
-## 📋 Prerequisites
-
-Before you begin, ensure you have the following installed:
-
-- **Python 3.8+** (Project uses 3.13)
-- **Docker & Docker Compose**
-- **Terraform**
-- **Git**
-- **AWS CLI** configured with credentials
-- **kubectl** (for Kubernetes operations)
-- **Snowflake Account** with appropriate permissions
-
-### Required AWS Services
-- Kinesis Streams
-- S3 Buckets
-- Lambda
-- ECS
-- CloudWatch
-
-### Required External Services
-- Snowflake Account
-- Power BI Account/License
-- GitHub Account (for repository)
-
-## 🚀 Quick Start
-
-### 1. Clone the Repository
-```bash
-git clone https://github.com/Sakthi1030/Enterprise-streaming-pipeline-using-AWS.git
-cd Enterprise-streaming-pipeline-using-AWS
-```
-
-### 2. Configure AWS
-```bash
-# Configure AWS credentials
-aws configure
-
-# Deploy infrastructure using Terraform
-cd phase_1_aws_infra/terraform
-terraform init
-terraform apply
-```
-
-### 3. Setup Python Environment
-```bash
-cd phase_5_agentic_ai
-python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
-pip install -r requirements.txt
-```
-
-### 4. Deploy Airflow
-```bash
-cd phase_3_airflow_orchestration/docker
-docker-compose up -d
-```
-
-### 5. Deploy to Kubernetes
-```bash
-cd phase_6_kubernetes
-kubectl apply -f namespaces.yaml
-kubectl apply -f agentic-ai/
-kubectl apply -f airflow/
-```
-
-### 6. Configure Snowflake
-```bash
-# Execute SQL scripts
-cd phase_4_snowflake/sql
-# Connect to Snowflake and run:
-# - create_warehouse.sql
-# - create_database.sql
-# - create_tables.sql
-```
-
-### 7. Run Data Generation
-```bash
-cd phase_2_data_generation
-python generate_master_data.py
-python generate_transactions.py
-python stream_to_kinesis.py
-```
-
-## 📂 Project Structure
+## 📁 Project Structure
 
 ```
 real_time_data/
-├── phase_1_aws_infra/           # AWS Infrastructure setup
-│   ├── iam/                     # IAM policies
-│   └── terraform/               # Terraform configurations
-├── phase_2_data_generation/     # Data generation scripts
-│   ├── generate_master_data.py
-│   ├── generate_transactions.py
-│   ├── stream_to_kinesis.py
-│   └── data/                    # Generated datasets
-├── phase_3_airflow_orchestration/  # Airflow DAGs and Docker
-│   ├── dags/                    # Airflow DAGs
-│   └── docker/                  # Docker setup
-├── phase_4_snowflake/           # Snowflake configuration
-│   ├── sql/                     # SQL scripts
-│   ├── schemas/                 # Schema definitions
-│   └── airflow_hooks/           # Snowflake integration
-├── phase_5_agentic_ai/          # AI agents and API
-│   ├── agents/                  # Agent implementations
-│   ├── api/                     # FastAPI application
-│   ├── tools/                   # Tool implementations
-│   ├── memory/                  # Vector store & embeddings
-│   └── docker/                  # Docker configuration
-├── phase_6_kubernetes/          # Kubernetes manifests
-│   ├── agentic-ai/              # AI deployment
-│   ├── airflow/                 # Airflow deployment
-│   └── monitoring/              # Prometheus & Grafana
-└── phase_7_powerbi/             # Power BI configuration
-    ├── connection/              # Snowflake integration
-    ├── dashboards/              # BI dashboards
-    └── datasets/                # Semantic models
+├── phase_1_aws_infra/          # Terraform IaC and IAM policies
+│   ├── iam/                    # IAM roles and policies
+│   └── terraform/              # AWS resource definitions
+├── phase_2_data_generation/    # Real-time data generation
+│   ├── generate_master_data.py # Master data creation
+│   ├── generate_transactions.py# Transaction data generation
+│   ├── stream_to_kinesis.py   # Kinesis streaming
+│   └── data/                   # Sample data and metadata
+├── phase_3_airflow_orchestration/ # Workflow orchestration
+│   ├── dags/                   # Airflow DAGs
+│   ├── docker/                 # Docker containerization
+│   └── plugins/                # Custom Airflow operators
+├── phase_4_snowflake/          # Data warehouse setup
+│   ├── schemas/                # Star schema definitions
+│   ├── sql/                    # SQL scripts
+│   └── airflow_hooks/          # Snowflake integration
+├── phase_5_agentic_ai/         # Multi-agent AI system
+│   ├── agents/                 # AI agents (root, sales, marketing, anomaly)
+│   ├── api/                    # FastAPI endpoints
+│   ├── tools/                  # Agent tools (Snowflake, alerts, reports)
+│   └── memory/                 # Vector store and embeddings
+├── phase_6_kubernetes/         # K8s deployment configs
+│   ├── agentic-ai/            # AI service deployment
+│   ├── airflow/               # Airflow deployment
+│   └── monitoring/            # Prometheus & Grafana
+└── phase_7_powerbi/           # BI integration
+    ├── connection/            # Snowflake connection setup
+    └── dashboards/            # Power BI dashboards
 ```
 
-## ⚙️ Configuration
+## 🚀 Quick Start
 
-### Airflow Configuration
-Edit `phase_3_airflow_orchestration/docker/airflow.env`:
-```
-AIRFLOW__CORE__SQL_ALCHEMY_CONN=postgresql://...
-AIRFLOW__CORE__LOAD_EXAMPLES=False
-AIRFLOW__SCHEDULER__DAG_DIR_LIST_INTERVAL=300
-```
+### Prerequisites
+- AWS Account with appropriate credentials
+- Terraform installed
+- Docker & Docker Compose
+- Python 3.13+
+- Kubernetes cluster (for Phase 6)
+- Power BI Desktop/Cloud account
+- Snowflake account
 
-### Snowflake Configuration
-Set environment variables:
+### Phase 1: AWS Infrastructure
 ```bash
-export SNOWFLAKE_ACCOUNT=your_account
-export SNOWFLAKE_USER=your_user
-export SNOWFLAKE_PASSWORD=your_password
-export SNOWFLAKE_WAREHOUSE=your_warehouse
-export SNOWFLAKE_DATABASE=your_database
+cd phase_1_aws_infra/terraform/
+# Configure variables.tf with your AWS account details
+terraform init
+terraform plan
+terraform apply
 ```
 
-### AWS Configuration
-Configure credentials in AWS CLI or use IAM roles within AWS services:
+### Phase 2: Data Generation
 ```bash
-aws configure --profile your-profile
+cd phase_2_data_generation/
+pip install -r requirements.txt
+python stream_to_kinesis.py
 ```
 
-### Kubernetes Configuration
-Update `phase_6_kubernetes/namespaces.yaml` with your specific settings.
+### Phase 3: Airflow Orchestration
+```bash
+cd phase_3_airflow_orchestration/docker/
+docker-compose up -d
+# Access Airflow UI at http://localhost:8080
+```
 
-## 🚀 Deployment
+### Phase 4: Snowflake Setup
+```bash
+cd phase_4_snowflake/
+# Update connection credentials
+python deploy_snowflake_schema.py
+```
 
-### Local Development
-1. Start Docker containers for Airflow
-2. Run data generation scripts
-3. Monitor Airflow UI at `http://localhost:8080`
+### Phase 5: Agentic AI
+```bash
+cd phase_5_agentic_ai/
+python -m venv venv_313
+source venv_313/bin/activate  # On Windows: venv_313\Scripts\activate
+pip install -r requirements.txt
+python api/main.py
+# Access API at http://localhost:8000
+```
 
-### AWS Deployment
-1. Deploy infrastructure with Terraform
-2. Push Docker images to ECR
-3. Deploy DAGs to Airflow
-4. Configure Snowflake connections
+### Phase 6: Kubernetes Deployment
+```bash
+cd phase_6_kubernetes/
+kubectl apply -f namespaces.yaml
+kubectl apply -f airflow/
+kubectl apply -f agentic-ai/
+kubectl apply -f monitoring/
+```
 
-### Kubernetes Deployment
-1. Configure kubectl for your cluster
-2. Apply namespace configuration
-3. Deploy services and deployments
-4. Monitor with Prometheus/Grafana
+### Phase 7: Power BI Integration
+Follow the connection steps in `phase_7_powerbi/connection/snowflake_connection_steps.md`
 
-## 📈 Key Features
+## 📊 Key Features
 
-✅ **Real-time Data Streaming**: AWS Kinesis for low-latency data ingestion
-✅ **Scalable ETL**: Apache Airflow for workflow orchestration
-✅ **Cloud Data Warehouse**: Snowflake for analytics
-✅ **AI Analytics**: Multi-agent system for intelligent insights
-✅ **Infrastructure as Code**: Terraform for reproducible deployments
-✅ **Container Ready**: Docker and Kubernetes support
-✅ **Business Intelligence**: Power BI integration
-✅ **Monitoring**: Prometheus and Grafana
-✅ **RESTful API**: FastAPI for agent interaction
-✅ **Vector Search**: Embeddings for semantic search
+- **Real-time Data Streaming** - Kinesis-based event ingestion
+- **Automated ETL** - Airflow orchestration with error handling
+- **Scalable Analytics** - Snowflake for petabyte-scale analysis
+- **Intelligent Automation** - Multi-agent AI for insights
+- **Production-Ready** - Kubernetes, monitoring, and high availability
+- **Data Visualization** - Power BI dashboards for business insights
 
-## 🔒 Security
+## 🤖 AI Agents
 
-- IAM policies for least privilege access
-- Encrypted data in transit and at rest
-- Secure credential management
-- Network isolation with Kubernetes network policies
-- Regular security updates for dependencies
+The agentic AI system includes:
+- **Root Agent** - Coordinates all agent activities
+- **Sales Agent** - Analyzes sales trends and performance
+- **Marketing Agent** - Campaign optimization and ROI analysis
+- **Anomaly Agent** - Detects and alerts on data anomalies
 
-## 📝 License
+## 📈 Monitoring & Observability
 
-This project is licensed under the MIT License - see the LICENSE file for details.
+- **Prometheus** - Metrics collection
+- **Grafana** - Real-time dashboards and alerts
+- **Airflow UI** - Pipeline monitoring and debugging
+- **Snowflake Query History** - Query performance analysis
+
+## 🔐 Security
+
+- **IAM Policies** - Fine-grained access control
+- **AWS Secrets Manager** - Credential management
+- **Role-based Access** - Kubernetes RBAC
+- **Encryption** - In-transit and at-rest
+
+## 📝 Configuration Files
+
+Key configuration files:
+- `phase_3_airflow_orchestration/docker/airflow.env` - Airflow settings
+- `phase_4_snowflake/schemas/star_schema.md` - Data schema documentation
+- `phase_6_kubernetes/namespaces.yaml` - K8s namespace definitions
+
+## 🧪 Testing
+
+Each phase includes Docker containerization for isolated testing:
+```bash
+# Test Airflow DAGs
+docker-compose -f phase_3_airflow_orchestration/docker/docker-compose.yml up
+
+# Test AI agents
+docker build -f phase_5_agentic_ai/docker/Dockerfile -t agentic-ai .
+docker run agentic-ai
+```
+
+## 📚 Documentation
+
+- [Phase 1 AWS Infrastructure](phase_1_aws_infra/README.md)
+- [Phase 5 Agentic AI](phase_5_agentic_ai/README.md)
+- [Phase 6 Kubernetes](phase_6_kubernetes/README.md)
+- [Snowflake Schema](phase_4_snowflake/schemas/star_schema.md)
+
+## 🛣️ Development Workflow
+
+1. Clone repository
+2. Configure AWS credentials (`~/.aws/credentials`)
+3. Set up Python virtual environment
+4. Deploy infrastructure with Terraform
+5. Run data generation scripts
+6. Start Airflow orchestration
+7. Deploy to Kubernetes
+8. Configure Power BI dashboards
 
 ## 🤝 Contributing
 
-Contributions are welcome! Please follow these steps:
+1. Test changes locally with Docker
+2. Validate Terraform configurations
+3. Update documentation
+4. Create pull request
 
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
+## 📄 License
+
+This project is provided as-is for educational and enterprise use.
 
 ## 📞 Support
 
 For issues and questions:
-- Open an issue on GitHub
-- Check existing documentation in phase directories
-- Review Docker logs for deployment issues
-
-## 🎯 Next Steps
-
-- Implement additional AI agents for specific use cases
-- Add more data sources and integration points
-- Enhance monitoring and alerting
-- Scale infrastructure for production workloads
-- Implement data quality frameworks
-- Add machine learning pipelines
+1. Check existing documentation
+2. Review DAG logs in Airflow UI
+3. Check Prometheus/Grafana metrics
+4. Review application logs
 
 ---
 
-**Built with ❤️ using AWS, Airflow, Snowflake, and AI**
+**Last Updated:** April 2026
+
+**Status:** ✅ Production-Ready
