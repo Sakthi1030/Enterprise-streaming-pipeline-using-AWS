@@ -1,0 +1,29 @@
+# Core
+python-dotenv
+pydantic>=2.0.0
+
+# AI & LLM
+langchain
+langchain-community
+langchain-openai
+openai
+tiktoken
+
+# Vector Store & Embeddings
+faiss-cpu
+sentence-transformers
+numpy
+
+# Snowflake
+snowflake-connector-python
+snowflake-sqlalchemy
+
+# Data Science
+pandas
+matplotlib
+plotly
+
+# API
+fastapi
+uvicorn
+python-multipart

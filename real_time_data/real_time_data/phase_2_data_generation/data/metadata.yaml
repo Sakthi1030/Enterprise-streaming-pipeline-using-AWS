@@ -1,0 +1,12 @@
+datasets:
+  campaigns: 20
+  customers: 5000
+  products: 1000
+  sales_reps: 50
+  stores: 20
+generated_at: '2026-02-07T20:30:39.511695'
+output_formats:
+- json
+- csv
+- parquet
+schema_version: '1.0'

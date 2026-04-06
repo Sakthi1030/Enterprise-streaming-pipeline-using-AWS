@@ -1,0 +1,50 @@
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "AllowS3Access",
+            "Effect": "Allow",
+            "Action": [
+                "s3:GetObject",
+                "s3:PutObject",
+                "s3:ListBucket",
+                "s3:DeleteObject"
+            ],
+            "Resource": [
+                "arn:aws:s3:::sales-platform-raw-*",
+                "arn:aws:s3:::sales-platform-raw-*/*",
+                "arn:aws:s3:::sales-platform-processed-*",
+                "arn:aws:s3:::sales-platform-processed-*/*",
+                "arn:aws:s3:::sales-platform-airflow-*",
+                "arn:aws:s3:::sales-platform-airflow-*/*"
+            ]
+        },
+        {
+            "Sid": "AllowKinesisAccess",
+            "Effect": "Allow",
+            "Action": [
+                "kinesis:DescribeStream",
+                "kinesis:GetShardIterator",
+                "kinesis:GetRecords",
+                "kinesis:PutRecord",
+                "kinesis:PutRecords"
+            ],
+            "Resource": [
+                "arn:aws:kinesis:*:*:stream/sales-data-stream-*"
+            ]
+        },
+        {
+            "Sid": "AllowCloudWatchLogs",
+            "Effect": "Allow",
+            "Action": [
+                "logs:CreateLogGroup",
+                "logs:CreateLogStream",
+                "logs:PutLogEvents",
+                "logs:DescribeLogStreams"
+            ],
+            "Resource": [
+                "arn:aws:logs:*:*:log-group:/ecs/*:*"
+            ]
+        }
+    ]
+}

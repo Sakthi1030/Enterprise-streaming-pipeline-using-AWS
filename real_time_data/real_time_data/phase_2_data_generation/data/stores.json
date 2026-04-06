@@ -1,0 +1,982 @@
+[
+  {
+    "store_id": "STORE100",
+    "store_name": "Smithview Outlet",
+    "store_type": "Regular",
+    "format": "Standalone",
+    "address": {
+      "street": "929 Ward Glens",
+      "city": "Smithview",
+      "state": "",
+      "country": "Togo",
+      "postal_code": "24359",
+      "region": "Middle East"
+    },
+    "coordinates": {
+      "latitude": -85.413823,
+      "longitude": -55.219898
+    },
+    "phone": "926-952-0008",
+    "email": "store100@company.com",
+    "manager_id": "REP146",
+    "opening_date": "2023-10-24",
+    "size_sqft": 4220,
+    "employee_count": 10,
+    "opening_hours": {
+      "monday": "9:00-21:00",
+      "tuesday": "9:00-21:00",
+      "wednesday": "9:00-21:00",
+      "thursday": "9:00-21:00",
+      "friday": "9:00-22:00",
+      "saturday": "10:00-22:00",
+      "sunday": "11:00-19:00"
+    },
+    "services": [
+      "Returns",
+      "Personal shopping",
+      "In-store pickup"
+    ],
+    "avg_daily_customers": 204,
+    "avg_transaction_value": 106,
+    "monthly_sales": 337629,
+    "inventory_value": 631142,
+    "parking_spaces": 47,
+    "has_cafe": false,
+    "has_wifi": true,
+    "is_24_hours": false,
+    "last_renovation": "",
+    "status": "Permanently Closed",
+    "notes": "Low foot traffic"
+  },
+  {
+    "store_id": "STORE101",
+    "store_name": "San Antonio Outlet",
+    "store_type": "Flagship",
+    "format": "Standalone",
+    "address": {
+      "street": "42502 Rivera Mountain Suite 493",
+      "city": "San Antonio",
+      "state": "Alaska",
+      "country": "USA",
+      "postal_code": "10289",
+      "region": "North America"
+    },
+    "coordinates": {
+      "latitude": -11.493522,
+      "longitude": 156.38034
+    },
+    "phone": "673-850-4299",
+    "email": "store101@company.com",
+    "manager_id": "REP104",
+    "opening_date": "2018-04-09",
+    "size_sqft": 5223,
+    "employee_count": 29,
+    "opening_hours": {
+      "monday": "9:00-21:00",
+      "tuesday": "9:00-21:00",
+      "wednesday": "9:00-21:00",
+      "thursday": "9:00-21:00",
+      "friday": "9:00-22:00",
+      "saturday": "10:00-22:00",
+      "sunday": "11:00-19:00"
+    },
+    "services": [
+      "Gift wrapping",
+      "Personal shopping",
+      "Returns"
+    ],
+    "avg_daily_customers": 392,
+    "avg_transaction_value": 179,
+    "monthly_sales": 58604,
+    "inventory_value": 138755,
+    "parking_spaces": 22,
+    "has_cafe": false,
+    "has_wifi": true,
+    "is_24_hours": true,
+    "last_renovation": "",
+    "status": "Temporarily Closed",
+    "notes": "Located in prime location"
+  },
+  {
+    "store_id": "STORE102",
+    "store_name": "Stephenchester Store",
+    "store_type": "Flagship",
+    "format": "Street",
+    "address": {
+      "street": "84015 James Causeway Suite 430",
+      "city": "Stephenchester",
+      "state": "",
+      "country": "United Arab Emirates",
+      "postal_code": "92342",
+      "region": "Asia Pacific"
+    },
+    "coordinates": {
+      "latitude": -73.491347,
+      "longitude": 27.251588
+    },
+    "phone": "386-860-3406x542",
+    "email": "store102@company.com",
+    "manager_id": "REP145",
+    "opening_date": "2024-03-17",
+    "size_sqft": 2425,
+    "employee_count": 9,
+    "opening_hours": {
+      "monday": "9:00-21:00",
+      "tuesday": "9:00-21:00",
+      "wednesday": "9:00-21:00",
+      "thursday": "9:00-21:00",
+      "friday": "9:00-22:00",
+      "saturday": "10:00-22:00",
+      "sunday": "11:00-19:00"
+    },
+    "services": [
+      "In-store pickup",
+      "Returns",
+      "Repairs"
+    ],
+    "avg_daily_customers": 1046,
+    "avg_transaction_value": 329,
+    "monthly_sales": 299685,
+    "inventory_value": 661428,
+    "parking_spaces": 63,
+    "has_cafe": true,
+    "has_wifi": false,
+    "is_24_hours": true,
+    "last_renovation": "2022-05-19",
+    "status": "Permanently Closed",
+    "notes": ""
+  },
+  {
+    "store_id": "STORE103",
+    "store_name": "Prague Boutique",
+    "store_type": "Warehouse",
+    "format": "Street",
+    "address": {
+      "street": "376 Aaron Shore Suite 941",
+      "city": "Prague",
+      "state": "",
+      "country": "Italy",
+      "postal_code": "88738",
+      "region": "Europe"
+    },
+    "coordinates": {
+      "latitude": -66.160253,
+      "longitude": 115.035583
+    },
+    "phone": "(422)309-9880x226",
+    "email": "store103@company.com",
+    "manager_id": "REP124",
+    "opening_date": "2016-10-30",
+    "size_sqft": 4535,
+    "employee_count": 10,
+    "opening_hours": {
+      "monday": "9:00-21:00",
+      "tuesday": "9:00-21:00",
+      "wednesday": "9:00-21:00",
+      "thursday": "9:00-21:00",
+      "friday": "9:00-22:00",
+      "saturday": "10:00-22:00",
+      "sunday": "11:00-19:00"
+    },
+    "services": [
+      "In-store pickup",
+      "Personal shopping",
+      "Returns"
+    ],
+    "avg_daily_customers": 1999,
+    "avg_transaction_value": 320,
+    "monthly_sales": 110351,
+    "inventory_value": 428998,
+    "parking_spaces": 36,
+    "has_cafe": true,
+    "has_wifi": true,
+    "is_24_hours": false,
+    "last_renovation": "2021-09-22",
+    "status": "Permanently Closed",
+    "notes": "Low foot traffic"
+  },
+  {
+    "store_id": "STORE104",
+    "store_name": "Amsterdam Outlet",
+    "store_type": "Outlet",
+    "format": "Standalone",
+    "address": {
+      "street": "466 Matthew Mountains Suite 190",
+      "city": "Amsterdam",
+      "state": "",
+      "country": "UK",
+      "postal_code": "01242",
+      "region": "Europe"
+    },
+    "coordinates": {
+      "latitude": 38.608781,
+      "longitude": 129.506657
+    },
+    "phone": "+1-210-628-2623",
+    "email": "store104@company.com",
+    "manager_id": "REP103",
+    "opening_date": "2021-07-31",
+    "size_sqft": 9544,
+    "employee_count": 5,
+    "opening_hours": {
+      "monday": "9:00-21:00",
+      "tuesday": "9:00-21:00",
+      "wednesday": "9:00-21:00",
+      "thursday": "9:00-21:00",
+      "friday": "9:00-22:00",
+      "saturday": "10:00-22:00",
+      "sunday": "11:00-19:00"
+    },
+    "services": [
+      "Gift wrapping",
+      "In-store pickup",
+      "Installation"
+    ],
+    "avg_daily_customers": 1170,
+    "avg_transaction_value": 358,
+    "monthly_sales": 58691,
+    "inventory_value": 878013,
+    "parking_spaces": 23,
+    "has_cafe": true,
+    "has_wifi": false,
+    "is_24_hours": true,
+    "last_renovation": "2022-09-14",
+    "status": "Temporarily Closed",
+    "notes": "Low foot traffic"
+  },
+  {
+    "store_id": "STORE105",
+    "store_name": "Lake Rebecca Superstore",
+    "store_type": "Flagship",
+    "format": "Shopping Center",
+    "address": {
+      "street": "795 Daniels Pass",
+      "city": "Lake Rebecca",
+      "state": "",
+      "country": "Czech Republic",
+      "postal_code": "47523",
+      "region": "Latin America"
+    },
+    "coordinates": {
+      "latitude": 57.114616,
+      "longitude": 164.23607
+    },
+    "phone": "(934)612-8029x3426",
+    "email": "store105@company.com",
+    "manager_id": "REP133",
+    "opening_date": "2025-01-13",
+    "size_sqft": 2927,
+    "employee_count": 33,
+    "opening_hours": {
+      "monday": "9:00-21:00",
+      "tuesday": "9:00-21:00",
+      "wednesday": "9:00-21:00",
+      "thursday": "9:00-21:00",
+      "friday": "9:00-22:00",
+      "saturday": "10:00-22:00",
+      "sunday": "11:00-19:00"
+    },
+    "services": [
+      "Gift wrapping",
+      "In-store pickup",
+      "Installation"
+    ],
+    "avg_daily_customers": 1308,
+    "avg_transaction_value": 254,
+    "monthly_sales": 428896,
+    "inventory_value": 389017,
+    "parking_spaces": 59,
+    "has_cafe": false,
+    "has_wifi": true,
+    "is_24_hours": false,
+    "last_renovation": "2025-03-13",
+    "status": "Under Renovation",
+    "notes": "Located in prime location"
+  },
+  {
+    "store_id": "STORE106",
+    "store_name": "San Diego Superstore",
+    "store_type": "Flagship",
+    "format": "Mall",
+    "address": {
+      "street": "460 Thompson Gardens Suite 130",
+      "city": "San Diego",
+      "state": "Massachusetts",
+      "country": "USA",
+      "postal_code": "09131",
+      "region": "North America"
+    },
+    "coordinates": {
+      "latitude": 62.015312,
+      "longitude": -124.662382
+    },
+    "phone": "965-515-8238",
+    "email": "store106@company.com",
+    "manager_id": "REP132",
+    "opening_date": "2018-11-01",
+    "size_sqft": 4032,
+    "employee_count": 9,
+    "opening_hours": {
+      "monday": "9:00-21:00",
+      "tuesday": "9:00-21:00",
+      "wednesday": "9:00-21:00",
+      "thursday": "9:00-21:00",
+      "friday": "9:00-22:00",
+      "saturday": "10:00-22:00",
+      "sunday": "11:00-19:00"
+    },
+    "services": [
+      "Installation",
+      "Returns",
+      "Repairs"
+    ],
+    "avg_daily_customers": 1026,
+    "avg_transaction_value": 358,
+    "monthly_sales": 491923,
+    "inventory_value": 568360,
+    "parking_spaces": 30,
+    "has_cafe": true,
+    "has_wifi": false,
+    "is_24_hours": false,
+    "last_renovation": "",
+    "status": "Permanently Closed",
+    "notes": ""
+  },
+  {
+    "store_id": "STORE107",
+    "store_name": "West Lisa Boutique",
+    "store_type": "Flagship",
+    "format": "Airport",
+    "address": {
+      "street": "3415 Mark Crossroad",
+      "city": "West Lisa",
+      "state": "",
+      "country": "Holy See (Vatican City State)",
+      "postal_code": "88526",
+      "region": "Latin America"
+    },
+    "coordinates": {
+      "latitude": -29.010554,
+      "longitude": 137.927906
+    },
+    "phone": "348-604-7032x945",
+    "email": "store107@company.com",
+    "manager_id": "REP130",
+    "opening_date": "2020-02-05",
+    "size_sqft": 9944,
+    "employee_count": 18,
+    "opening_hours": {
+      "monday": "9:00-21:00",
+      "tuesday": "9:00-21:00",
+      "wednesday": "9:00-21:00",
+      "thursday": "9:00-21:00",
+      "friday": "9:00-22:00",
+      "saturday": "10:00-22:00",
+      "sunday": "11:00-19:00"
+    },
+    "services": [
+      "Installation",
+      "Returns",
+      "Gift wrapping"
+    ],
+    "avg_daily_customers": 1177,
+    "avg_transaction_value": 173,
+    "monthly_sales": 194402,
+    "inventory_value": 380924,
+    "parking_spaces": 85,
+    "has_cafe": true,
+    "has_wifi": false,
+    "is_24_hours": false,
+    "last_renovation": "",
+    "status": "Active",
+    "notes": "High performing store"
+  },
+  {
+    "store_id": "STORE108",
+    "store_name": "Port Brookefurt Superstore",
+    "store_type": "Pop-up",
+    "format": "Standalone",
+    "address": {
+      "street": "2558 Arias Rest Apt. 409",
+      "city": "Port Brookefurt",
+      "state": "",
+      "country": "Fiji",
+      "postal_code": "31286",
+      "region": "Middle East"
+    },
+    "coordinates": {
+      "latitude": 40.485465,
+      "longitude": 96.687621
+    },
+    "phone": "303-812-2408x2486",
+    "email": "store108@company.com",
+    "manager_id": "REP133",
+    "opening_date": "2020-02-11",
+    "size_sqft": 5539,
+    "employee_count": 36,
+    "opening_hours": {
+      "monday": "9:00-21:00",
+      "tuesday": "9:00-21:00",
+      "wednesday": "9:00-21:00",
+      "thursday": "9:00-21:00",
+      "friday": "9:00-22:00",
+      "saturday": "10:00-22:00",
+      "sunday": "11:00-19:00"
+    },
+    "services": [
+      "In-store pickup",
+      "Returns",
+      "Repairs"
+    ],
+    "avg_daily_customers": 1364,
+    "avg_transaction_value": 180,
+    "monthly_sales": 155647,
+    "inventory_value": 615514,
+    "parking_spaces": 3,
+    "has_cafe": true,
+    "has_wifi": false,
+    "is_24_hours": true,
+    "last_renovation": "",
+    "status": "Temporarily Closed",
+    "notes": "Located in prime location"
+  },
+  {
+    "store_id": "STORE109",
+    "store_name": "Marshallside Superstore",
+    "store_type": "Warehouse",
+    "format": "Mall",
+    "address": {
+      "street": "5115 John Burg Suite 623",
+      "city": "Marshallside",
+      "state": "",
+      "country": "India",
+      "postal_code": "58981",
+      "region": "Latin America"
+    },
+    "coordinates": {
+      "latitude": -7.645489,
+      "longitude": 54.182357
+    },
+    "phone": "574.838.1637x1647",
+    "email": "store109@company.com",
+    "manager_id": "REP102",
+    "opening_date": "2017-01-24",
+    "size_sqft": 3145,
+    "employee_count": 8,
+    "opening_hours": {
+      "monday": "9:00-21:00",
+      "tuesday": "9:00-21:00",
+      "wednesday": "9:00-21:00",
+      "thursday": "9:00-21:00",
+      "friday": "9:00-22:00",
+      "saturday": "10:00-22:00",
+      "sunday": "11:00-19:00"
+    },
+    "services": [
+      "Gift wrapping",
+      "Personal shopping",
+      "In-store pickup"
+    ],
+    "avg_daily_customers": 125,
+    "avg_transaction_value": 254,
+    "monthly_sales": 267008,
+    "inventory_value": 838703,
+    "parking_spaces": 43,
+    "has_cafe": true,
+    "has_wifi": false,
+    "is_24_hours": false,
+    "last_renovation": "",
+    "status": "Under Renovation",
+    "notes": "Low foot traffic"
+  },
+  {
+    "store_id": "STORE110",
+    "store_name": "North Michelle Store",
+    "store_type": "Pop-up",
+    "format": "Mall",
+    "address": {
+      "street": "759 Garcia Stream Suite 908",
+      "city": "North Michelle",
+      "state": "",
+      "country": "Libyan Arab Jamahiriya",
+      "postal_code": "67595",
+      "region": "Asia Pacific"
+    },
+    "coordinates": {
+      "latitude": 22.81907,
+      "longitude": -125.943658
+    },
+    "phone": "4973054035",
+    "email": "store110@company.com",
+    "manager_id": "REP102",
+    "opening_date": "2018-04-10",
+    "size_sqft": 4634,
+    "employee_count": 18,
+    "opening_hours": {
+      "monday": "9:00-21:00",
+      "tuesday": "9:00-21:00",
+      "wednesday": "9:00-21:00",
+      "thursday": "9:00-21:00",
+      "friday": "9:00-22:00",
+      "saturday": "10:00-22:00",
+      "sunday": "11:00-19:00"
+    },
+    "services": [
+      "Returns",
+      "Repairs",
+      "Personal shopping"
+    ],
+    "avg_daily_customers": 354,
+    "avg_transaction_value": 170,
+    "monthly_sales": 344082,
+    "inventory_value": 115003,
+    "parking_spaces": 84,
+    "has_cafe": true,
+    "has_wifi": true,
+    "is_24_hours": true,
+    "last_renovation": "2023-08-21",
+    "status": "Temporarily Closed",
+    "notes": "Located in prime location"
+  },
+  {
+    "store_id": "STORE111",
+    "store_name": "Madrid Store",
+    "store_type": "Pop-up",
+    "format": "Standalone",
+    "address": {
+      "street": "95039 David Rue Suite 326",
+      "city": "Madrid",
+      "state": "",
+      "country": "France",
+      "postal_code": "56053",
+      "region": "Europe"
+    },
+    "coordinates": {
+      "latitude": 85.49384,
+      "longitude": 167.880523
+    },
+    "phone": "+1-853-516-1935x0294",
+    "email": "store111@company.com",
+    "manager_id": "REP121",
+    "opening_date": "2024-06-18",
+    "size_sqft": 9902,
+    "employee_count": 10,
+    "opening_hours": {
+      "monday": "9:00-21:00",
+      "tuesday": "9:00-21:00",
+      "wednesday": "9:00-21:00",
+      "thursday": "9:00-21:00",
+      "friday": "9:00-22:00",
+      "saturday": "10:00-22:00",
+      "sunday": "11:00-19:00"
+    },
+    "services": [
+      "In-store pickup",
+      "Gift wrapping",
+      "Repairs"
+    ],
+    "avg_daily_customers": 1919,
+    "avg_transaction_value": 195,
+    "monthly_sales": 218869,
+    "inventory_value": 226769,
+    "parking_spaces": 20,
+    "has_cafe": false,
+    "has_wifi": false,
+    "is_24_hours": false,
+    "last_renovation": "",
+    "status": "Temporarily Closed",
+    "notes": "Low foot traffic"
+  },
+  {
+    "store_id": "STORE112",
+    "store_name": "New Alexandra Outlet",
+    "store_type": "Outlet",
+    "format": "Shopping Center",
+    "address": {
+      "street": "1293 Peter Green",
+      "city": "New Alexandra",
+      "state": "",
+      "country": "Belgium",
+      "postal_code": "99860",
+      "region": "Middle East"
+    },
+    "coordinates": {
+      "latitude": -3.376224,
+      "longitude": 25.776366
+    },
+    "phone": "(545)821-2472",
+    "email": "store112@company.com",
+    "manager_id": "REP125",
+    "opening_date": "2018-07-31",
+    "size_sqft": 5138,
+    "employee_count": 13,
+    "opening_hours": {
+      "monday": "9:00-21:00",
+      "tuesday": "9:00-21:00",
+      "wednesday": "9:00-21:00",
+      "thursday": "9:00-21:00",
+      "friday": "9:00-22:00",
+      "saturday": "10:00-22:00",
+      "sunday": "11:00-19:00"
+    },
+    "services": [
+      "Returns",
+      "Installation",
+      "In-store pickup"
+    ],
+    "avg_daily_customers": 143,
+    "avg_transaction_value": 317,
+    "monthly_sales": 496491,
+    "inventory_value": 275098,
+    "parking_spaces": 80,
+    "has_cafe": false,
+    "has_wifi": true,
+    "is_24_hours": false,
+    "last_renovation": "",
+    "status": "Temporarily Closed",
+    "notes": "Located in prime location"
+  },
+  {
+    "store_id": "STORE113",
+    "store_name": "Sarahmouth Outlet",
+    "store_type": "Pop-up",
+    "format": "Standalone",
+    "address": {
+      "street": "5437 Cowan Stream",
+      "city": "Sarahmouth",
+      "state": "",
+      "country": "Paraguay",
+      "postal_code": "46603",
+      "region": "Asia Pacific"
+    },
+    "coordinates": {
+      "latitude": 0.167822,
+      "longitude": 30.903974
+    },
+    "phone": "205.538.1089x6488",
+    "email": "store113@company.com",
+    "manager_id": "REP100",
+    "opening_date": "2024-11-23",
+    "size_sqft": 6782,
+    "employee_count": 38,
+    "opening_hours": {
+      "monday": "9:00-21:00",
+      "tuesday": "9:00-21:00",
+      "wednesday": "9:00-21:00",
+      "thursday": "9:00-21:00",
+      "friday": "9:00-22:00",
+      "saturday": "10:00-22:00",
+      "sunday": "11:00-19:00"
+    },
+    "services": [
+      "Installation",
+      "In-store pickup",
+      "Gift wrapping"
+    ],
+    "avg_daily_customers": 819,
+    "avg_transaction_value": 75,
+    "monthly_sales": 177343,
+    "inventory_value": 865516,
+    "parking_spaces": 31,
+    "has_cafe": true,
+    "has_wifi": false,
+    "is_24_hours": true,
+    "last_renovation": "2022-07-02",
+    "status": "Permanently Closed",
+    "notes": ""
+  },
+  {
+    "store_id": "STORE114",
+    "store_name": "Chicago Store",
+    "store_type": "Outlet",
+    "format": "Standalone",
+    "address": {
+      "street": "55905 Ward Prairie",
+      "city": "Chicago",
+      "state": "North Carolina",
+      "country": "USA",
+      "postal_code": "92742",
+      "region": "North America"
+    },
+    "coordinates": {
+      "latitude": 57.022848,
+      "longitude": -126.638156
+    },
+    "phone": "+1-781-928-6443x7900",
+    "email": "store114@company.com",
+    "manager_id": "REP144",
+    "opening_date": "2018-11-28",
+    "size_sqft": 2921,
+    "employee_count": 40,
+    "opening_hours": {
+      "monday": "9:00-21:00",
+      "tuesday": "9:00-21:00",
+      "wednesday": "9:00-21:00",
+      "thursday": "9:00-21:00",
+      "friday": "9:00-22:00",
+      "saturday": "10:00-22:00",
+      "sunday": "11:00-19:00"
+    },
+    "services": [
+      "Installation",
+      "In-store pickup",
+      "Gift wrapping"
+    ],
+    "avg_daily_customers": 472,
+    "avg_transaction_value": 115,
+    "monthly_sales": 474492,
+    "inventory_value": 409081,
+    "parking_spaces": 62,
+    "has_cafe": false,
+    "has_wifi": true,
+    "is_24_hours": true,
+    "last_renovation": "2022-04-04",
+    "status": "Permanently Closed",
+    "notes": "Located in prime location"
+  },
+  {
+    "store_id": "STORE115",
+    "store_name": "Houston Superstore",
+    "store_type": "Pop-up",
+    "format": "Shopping Center",
+    "address": {
+      "street": "1476 Darlene Ports",
+      "city": "Houston",
+      "state": "Kentucky",
+      "country": "USA",
+      "postal_code": "75297",
+      "region": "North America"
+    },
+    "coordinates": {
+      "latitude": 43.008197,
+      "longitude": 75.270388
+    },
+    "phone": "991.394.6499x8350",
+    "email": "store115@company.com",
+    "manager_id": "REP114",
+    "opening_date": "2018-12-03",
+    "size_sqft": 6941,
+    "employee_count": 42,
+    "opening_hours": {
+      "monday": "9:00-21:00",
+      "tuesday": "9:00-21:00",
+      "wednesday": "9:00-21:00",
+      "thursday": "9:00-21:00",
+      "friday": "9:00-22:00",
+      "saturday": "10:00-22:00",
+      "sunday": "11:00-19:00"
+    },
+    "services": [
+      "Gift wrapping",
+      "In-store pickup",
+      "Installation"
+    ],
+    "avg_daily_customers": 1647,
+    "avg_transaction_value": 174,
+    "monthly_sales": 232868,
+    "inventory_value": 916728,
+    "parking_spaces": 81,
+    "has_cafe": false,
+    "has_wifi": false,
+    "is_24_hours": true,
+    "last_renovation": "",
+    "status": "Permanently Closed",
+    "notes": "Low foot traffic"
+  },
+  {
+    "store_id": "STORE116",
+    "store_name": "London Boutique",
+    "store_type": "Regular",
+    "format": "Airport",
+    "address": {
+      "street": "3516 William Ramp Apt. 104",
+      "city": "London",
+      "state": "",
+      "country": "Germany",
+      "postal_code": "93654",
+      "region": "Europe"
+    },
+    "coordinates": {
+      "latitude": -52.793103,
+      "longitude": 161.920837
+    },
+    "phone": "(586)901-0181x50110",
+    "email": "store116@company.com",
+    "manager_id": "REP137",
+    "opening_date": "2024-09-12",
+    "size_sqft": 4718,
+    "employee_count": 13,
+    "opening_hours": {
+      "monday": "9:00-21:00",
+      "tuesday": "9:00-21:00",
+      "wednesday": "9:00-21:00",
+      "thursday": "9:00-21:00",
+      "friday": "9:00-22:00",
+      "saturday": "10:00-22:00",
+      "sunday": "11:00-19:00"
+    },
+    "services": [
+      "Personal shopping",
+      "Returns",
+      "Gift wrapping"
+    ],
+    "avg_daily_customers": 209,
+    "avg_transaction_value": 52,
+    "monthly_sales": 244949,
+    "inventory_value": 735413,
+    "parking_spaces": 48,
+    "has_cafe": false,
+    "has_wifi": false,
+    "is_24_hours": true,
+    "last_renovation": "2024-11-18",
+    "status": "Under Renovation",
+    "notes": "Located in prime location"
+  },
+  {
+    "store_id": "STORE117",
+    "store_name": "Hebertberg Boutique",
+    "store_type": "Pop-up",
+    "format": "Standalone",
+    "address": {
+      "street": "7018 Bryan Passage Suite 843",
+      "city": "Hebertberg",
+      "state": "",
+      "country": "Sri Lanka",
+      "postal_code": "61919",
+      "region": "Asia Pacific"
+    },
+    "coordinates": {
+      "latitude": 8.765088,
+      "longitude": 138.924521
+    },
+    "phone": "222-260-7507x2990",
+    "email": "store117@company.com",
+    "manager_id": "REP106",
+    "opening_date": "2016-06-16",
+    "size_sqft": 6309,
+    "employee_count": 18,
+    "opening_hours": {
+      "monday": "9:00-21:00",
+      "tuesday": "9:00-21:00",
+      "wednesday": "9:00-21:00",
+      "thursday": "9:00-21:00",
+      "friday": "9:00-22:00",
+      "saturday": "10:00-22:00",
+      "sunday": "11:00-19:00"
+    },
+    "services": [
+      "In-store pickup",
+      "Installation",
+      "Repairs"
+    ],
+    "avg_daily_customers": 503,
+    "avg_transaction_value": 65,
+    "monthly_sales": 258605,
+    "inventory_value": 850728,
+    "parking_spaces": 33,
+    "has_cafe": true,
+    "has_wifi": true,
+    "is_24_hours": true,
+    "last_renovation": "",
+    "status": "Active",
+    "notes": "Low foot traffic"
+  },
+  {
+    "store_id": "STORE118",
+    "store_name": "Williamshire Boutique",
+    "store_type": "Pop-up",
+    "format": "Mall",
+    "address": {
+      "street": "93639 Serrano Isle",
+      "city": "Williamshire",
+      "state": "",
+      "country": "Guam",
+      "postal_code": "28488",
+      "region": "Asia Pacific"
+    },
+    "coordinates": {
+      "latitude": -33.035734,
+      "longitude": 165.272244
+    },
+    "phone": "3376200001",
+    "email": "store118@company.com",
+    "manager_id": "REP149",
+    "opening_date": "2018-01-09",
+    "size_sqft": 7165,
+    "employee_count": 24,
+    "opening_hours": {
+      "monday": "9:00-21:00",
+      "tuesday": "9:00-21:00",
+      "wednesday": "9:00-21:00",
+      "thursday": "9:00-21:00",
+      "friday": "9:00-22:00",
+      "saturday": "10:00-22:00",
+      "sunday": "11:00-19:00"
+    },
+    "services": [
+      "Personal shopping",
+      "In-store pickup",
+      "Returns"
+    ],
+    "avg_daily_customers": 1212,
+    "avg_transaction_value": 411,
+    "monthly_sales": 368153,
+    "inventory_value": 787385,
+    "parking_spaces": 98,
+    "has_cafe": true,
+    "has_wifi": true,
+    "is_24_hours": false,
+    "last_renovation": "2023-10-01",
+    "status": "Permanently Closed",
+    "notes": "Low foot traffic"
+  },
+  {
+    "store_id": "STORE119",
+    "store_name": "Lake Richardmouth Superstore",
+    "store_type": "Warehouse",
+    "format": "Mall",
+    "address": {
+      "street": "96779 Keith Spur Apt. 571",
+      "city": "Lake Richardmouth",
+      "state": "",
+      "country": "Gabon",
+      "postal_code": "37756",
+      "region": "Asia Pacific"
+    },
+    "coordinates": {
+      "latitude": 34.285419,
+      "longitude": 177.50969
+    },
+    "phone": "001-349-792-0977",
+    "email": "store119@company.com",
+    "manager_id": "REP130",
+    "opening_date": "2021-07-13",
+    "size_sqft": 4486,
+    "employee_count": 13,
+    "opening_hours": {
+      "monday": "9:00-21:00",
+      "tuesday": "9:00-21:00",
+      "wednesday": "9:00-21:00",
+      "thursday": "9:00-21:00",
+      "friday": "9:00-22:00",
+      "saturday": "10:00-22:00",
+      "sunday": "11:00-19:00"
+    },
+    "services": [
+      "In-store pickup",
+      "Installation",
+      "Gift wrapping"
+    ],
+    "avg_daily_customers": 1896,
+    "avg_transaction_value": 160,
+    "monthly_sales": 273532,
+    "inventory_value": 193592,
+    "parking_spaces": 55,
+    "has_cafe": true,
+    "has_wifi": false,
+    "is_24_hours": false,
+    "last_renovation": "2021-09-27",
+    "status": "Temporarily Closed",
+    "notes": "Located in prime location"
+  }
+]

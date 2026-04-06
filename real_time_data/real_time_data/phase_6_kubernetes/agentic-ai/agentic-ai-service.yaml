@@ -1,0 +1,147 @@
+---
+# Agentic AI Database Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: agentic-db
+  namespace: ai-agents
+  labels:
+    app: agentic-db
+    component: database
+spec:
+  ports:
+  - port: 5432
+    targetPort: 5432
+  selector:
+    app: agentic-db
+  clusterIP: None
+---
+# Agentic AI Redis Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: agentic-redis
+  namespace: ai-agents
+  labels:
+    app: agentic-redis
+    component: cache
+spec:
+  ports:
+  - port: 6379
+    targetPort: 6379
+  selector:
+    app: agentic-redis
+---
+# Agentic AI Main Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: agentic-ai
+  namespace: ai-agents
+  labels:
+    app: agentic-ai
+    component: api
+spec:
+  type: LoadBalancer
+  ports:
+  - name: http
+    port: 80
+    targetPort: 8000
+    protocol: TCP
+  - name: metrics
+    port: 8001
+    targetPort: 8001
+    protocol: TCP
+  selector:
+    app: agentic-ai
+  externalTrafficPolicy: Local
+  sessionAffinity: ClientIP
+---
+# Agentic AI Internal Service (for cluster communication)
+apiVersion: v1
+kind: Service
+metadata:
+  name: agentic-ai-internal
+  namespace: ai-agents
+  labels:
+    app: agentic-ai
+    component: api
+spec:
+  type: ClusterIP
+  ports:
+  - name: http
+    port: 8000
+    targetPort: 8000
+    protocol: TCP
+  selector:
+    app: agentic-ai
+---
+# Ingress for Agentic AI API
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: agentic-ai-ingress
+  namespace: ai-agents
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/proxy-body-size: "50m"
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "300"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "300"
+    nginx.ingress.kubernetes.io/enable-cors: "true"
+    nginx.ingress.kubernetes.io/cors-allow-methods: "GET, POST, PUT, DELETE, OPTIONS"
+    nginx.ingress.kubernetes.io/cors-allow-origin: "*"
+    nginx.ingress.kubernetes.io/cors-allow-headers: "DNT,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Range,Authorization"
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: agents.your-domain.com
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: agentic-ai
+            port:
+              number: 80
+      - path: /docs
+        pathType: Prefix
+        backend:
+          service:
+            name: agentic-ai
+            port:
+              number: 80
+      - path: /health
+        pathType: Prefix
+        backend:
+          service:
+            name: agentic-ai
+            port:
+              number: 80
+  - host: api.agents.your-domain.com
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: agentic-ai
+            port:
+              number: 80
+---
+# Secrets for Agentic AI
+apiVersion: v1
+kind: Secret
+metadata:
+  name: agentic-secrets
+  namespace: ai-agents
+type: Opaque
+data:
+  db-password: cGFzc3dvcmQxMjM0NTY=  # password123456 in base64
+  openai-api-key: eW91ci1vcGVuYWkta2V5LWhlcmU=  # your-openai-key-here in base64 - REPLACE THIS
+  snowflake-account: eW91ci1hY2NvdW50LmF1LXdlc3QtMi5henVyZQ==  # your-account.au-west-2.azure
+  snowflake-user: YWdlbnRpY191c2Vy  # agentic_user
+  snowflake-password: c25vd2ZsYWtlX3Bhc3N3b3Jk  # snowflake_password
+  fernet-key: b2hLVk05S1VvdjFlM2h3N0RMRTVJalJ1dHZBSmxTNHI=  # Generated fernet key
+  jwt-secret: c2VjcmV0a2V5Zm9yanNvbndlYlRva2Vucw==  # secretkeyforjsonwebtokens

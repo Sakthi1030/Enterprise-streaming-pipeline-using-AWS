@@ -1,0 +1,497 @@
+---
+# Airflow PostgreSQL Database
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: airflow-postgres-pvc
+  namespace: data-pipeline
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 20Gi
+  storageClassName: standard
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: airflow-postgres
+  namespace: data-pipeline
+  labels:
+    app: airflow-postgres
+    component: database
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: airflow-postgres
+  template:
+    metadata:
+      labels:
+        app: airflow-postgres
+    spec:
+      containers:
+      - name: postgres
+        image: postgres:13
+        ports:
+        - containerPort: 5432
+        env:
+        - name: POSTGRES_USER
+          value: airflow
+        - name: POSTGRES_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: airflow-secrets
+              key: postgres-password
+        - name: POSTGRES_DB
+          value: airflow
+        volumeMounts:
+        - name: postgres-data
+          mountPath: /var/lib/postgresql/data
+        resources:
+          requests:
+            memory: "512Mi"
+            cpu: "250m"
+          limits:
+            memory: "2Gi"
+            cpu: "1000m"
+      volumes:
+      - name: postgres-data
+        persistentVolumeClaim:
+          claimName: airflow-postgres-pvc
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: airflow-postgres
+  namespace: data-pipeline
+spec:
+  ports:
+  - port: 5432
+    targetPort: 5432
+  selector:
+    app: airflow-postgres
+---
+# Airflow Redis (Celery Broker)
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: airflow-redis
+  namespace: data-pipeline
+  labels:
+    app: airflow-redis
+    component: broker
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: airflow-redis
+  template:
+    metadata:
+      labels:
+        app: airflow-redis
+    spec:
+      containers:
+      - name: redis
+        image: redis:7-alpine
+        ports:
+        - containerPort: 6379
+        command: ["redis-server", "--appendonly", "yes"]
+        volumeMounts:
+        - name: redis-data
+          mountPath: /data
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "100m"
+          limits:
+            memory: "1Gi"
+            cpu: "500m"
+      volumes:
+      - name: redis-data
+        emptyDir: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: airflow-redis
+  namespace: data-pipeline
+spec:
+  ports:
+  - port: 6379
+    targetPort: 6379
+  selector:
+    app: airflow-redis
+---
+# Airflow Webserver
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: airflow-config
+  namespace: data-pipeline
+data:
+  airflow.cfg: |
+    [core]
+    dags_folder = /opt/airflow/dags
+    base_log_folder = /opt/airflow/logs
+    executor = CeleryExecutor
+    sql_alchemy_conn = postgresql+psycopg2://airflow:${POSTGRES_PASSWORD}@airflow-postgres:5432/airflow
+    parallelism = 32
+    dag_concurrency = 16
+    max_active_runs_per_dag = 16
+    load_examples = False
+    fernet_key = ${FERNET_KEY}
+    
+    [webserver]
+    base_url = http://localhost:8080
+    web_server_host = 0.0.0.0
+    web_server_port = 8080
+    
+    [celery]
+    broker_url = redis://airflow-redis:6379/0
+    result_backend = db+postgresql://airflow:${POSTGRES_PASSWORD}@airflow-postgres:5432/airflow
+    
+    [logging]
+    remote_logging = True
+    remote_log_conn_id = s3_logs
+    remote_base_log_folder = s3://airflow-logs/
+    encrypt_s3_logs = False
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: airflow-webserver
+  namespace: data-pipeline
+  labels:
+    app: airflow-webserver
+    component: webserver
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: airflow-webserver
+  template:
+    metadata:
+      labels:
+        app: airflow-webserver
+    spec:
+      initContainers:
+      - name: wait-for-db
+        image: busybox:1.28
+        command: ['sh', '-c', 'until nc -z airflow-postgres 5432; do echo waiting for database; sleep 2; done;']
+      - name: wait-for-redis
+        image: busybox:1.28
+        command: ['sh', '-c', 'until nc -z airflow-redis 6379; do echo waiting for redis; sleep 2; done;']
+      - name: init-airflow-db
+        image: apache/airflow:2.7.1-python3.9
+        command: ["bash", "-c"]
+        args:
+          - |
+            airflow db init &&
+            airflow users create \
+              --username admin \
+              --firstname Admin \
+              --lastname User \
+              --role Admin \
+              --email admin@example.com \
+              --password ${ADMIN_PASSWORD}
+        env:
+        - name: AIRFLOW__CORE__FERNET_KEY
+          valueFrom:
+            secretKeyRef:
+              name: airflow-secrets
+              key: fernet-key
+        - name: ADMIN_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: airflow-secrets
+              key: admin-password
+        - name: POSTGRES_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: airflow-secrets
+              key: postgres-password
+      containers:
+      - name: webserver
+        image: apache/airflow:2.7.1-python3.9
+        ports:
+        - containerPort: 8080
+        env:
+        - name: AIRFLOW__CORE__EXECUTOR
+          value: CeleryExecutor
+        - name: AIRFLOW__DATABASE__SQL_ALCHEMY_CONN
+          value: postgresql+psycopg2://airflow:${POSTGRES_PASSWORD}@airflow-postgres:5432/airflow
+        - name: AIRFLOW__CELERY__BROKER_URL
+          value: redis://airflow-redis:6379/0
+        - name: AIRFLOW__CELERY__RESULT_BACKEND
+          value: db+postgresql://airflow:${POSTGRES_PASSWORD}@airflow-postgres:5432/airflow
+        - name: AIRFLOW__CORE__FERNET_KEY
+          valueFrom:
+            secretKeyRef:
+              name: airflow-secrets
+              key: fernet-key
+        - name: POSTGRES_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: airflow-secrets
+              key: postgres-password
+        volumeMounts:
+        - name: airflow-dags
+          mountPath: /opt/airflow/dags
+        - name: airflow-logs
+          mountPath: /opt/airflow/logs
+        - name: airflow-config
+          mountPath: /opt/airflow/airflow.cfg
+          subPath: airflow.cfg
+        command: ["bash", "-c"]
+        args:
+          - airflow webserver
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8080
+          initialDelaySeconds: 30
+          periodSeconds: 30
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 8080
+          initialDelaySeconds: 30
+          periodSeconds: 30
+        resources:
+          requests:
+            memory: "1Gi"
+            cpu: "500m"
+          limits:
+            memory: "2Gi"
+            cpu: "1000m"
+      volumes:
+      - name: airflow-dags
+        persistentVolumeClaim:
+          claimName: airflow-dags-pvc
+      - name: airflow-logs
+        emptyDir: {}
+      - name: airflow-config
+        configMap:
+          name: airflow-config
+---
+# Airflow Scheduler
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: airflow-scheduler
+  namespace: data-pipeline
+  labels:
+    app: airflow-scheduler
+    component: scheduler
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: airflow-scheduler
+  template:
+    metadata:
+      labels:
+        app: airflow-scheduler
+    spec:
+      initContainers:
+      - name: wait-for-db
+        image: busybox:1.28
+        command: ['sh', '-c', 'until nc -z airflow-postgres 5432; do echo waiting for database; sleep 2; done;']
+      - name: wait-for-redis
+        image: busybox:1.28
+        command: ['sh', '-c', 'until nc -z airflow-redis 6379; do echo waiting for redis; sleep 2; done;']
+      containers:
+      - name: scheduler
+        image: apache/airflow:2.7.1-python3.9
+        env:
+        - name: AIRFLOW__CORE__EXECUTOR
+          value: CeleryExecutor
+        - name: AIRFLOW__DATABASE__SQL_ALCHEMY_CONN
+          value: postgresql+psycopg2://airflow:${POSTGRES_PASSWORD}@airflow-postgres:5432/airflow
+        - name: AIRFLOW__CELERY__BROKER_URL
+          value: redis://airflow-redis:6379/0
+        - name: AIRFLOW__CELERY__RESULT_BACKEND
+          value: db+postgresql://airflow:${POSTGRES_PASSWORD}@airflow-postgres:5432/airflow
+        - name: AIRFLOW__CORE__FERNET_KEY
+          valueFrom:
+            secretKeyRef:
+              name: airflow-secrets
+              key: fernet-key
+        - name: POSTGRES_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: airflow-secrets
+              key: postgres-password
+        volumeMounts:
+        - name: airflow-dags
+          mountPath: /opt/airflow/dags
+        - name: airflow-logs
+          mountPath: /opt/airflow/logs
+        - name: airflow-config
+          mountPath: /opt/airflow/airflow.cfg
+          subPath: airflow.cfg
+        command: ["bash", "-c"]
+        args:
+          - airflow scheduler
+        livenessProbe:
+          exec:
+            command:
+            - sh
+            - -c
+            - airflow jobs check --job-type SchedulerJob --hostname $(hostname)
+          initialDelaySeconds: 60
+          periodSeconds: 30
+        resources:
+          requests:
+            memory: "1Gi"
+            cpu: "500m"
+          limits:
+            memory: "2Gi"
+            cpu: "1000m"
+      volumes:
+      - name: airflow-dags
+        persistentVolumeClaim:
+          claimName: airflow-dags-pvc
+      - name: airflow-logs
+        emptyDir: {}
+      - name: airflow-config
+        configMap:
+          name: airflow-config
+---
+# Airflow Worker
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: airflow-worker
+  namespace: data-pipeline
+  labels:
+    app: airflow-worker
+    component: worker
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: airflow-worker
+  template:
+    metadata:
+      labels:
+        app: airflow-worker
+    spec:
+      initContainers:
+      - name: wait-for-db
+        image: busybox:1.28
+        command: ['sh', '-c', 'until nc -z airflow-postgres 5432; do echo waiting for database; sleep 2; done;']
+      - name: wait-for-redis
+        image: busybox:1.28
+        command: ['sh', '-c', 'until nc -z airflow-redis 6379; do echo waiting for redis; sleep 2; done;']
+      containers:
+      - name: worker
+        image: apache/airflow:2.7.1-python3.9
+        env:
+        - name: AIRFLOW__CORE__EXECUTOR
+          value: CeleryExecutor
+        - name: AIRFLOW__DATABASE__SQL_ALCHEMY_CONN
+          value: postgresql+psycopg2://airflow:${POSTGRES_PASSWORD}@airflow-postgres:5432/airflow
+        - name: AIRFLOW__CELERY__BROKER_URL
+          value: redis://airflow-redis:6379/0
+        - name: AIRFLOW__CELERY__RESULT_BACKEND
+          value: db+postgresql://airflow:${POSTGRES_PASSWORD}@airflow-postgres:5432/airflow
+        - name: AIRFLOW__CORE__FERNET_KEY
+          valueFrom:
+            secretKeyRef:
+              name: airflow-secrets
+              key: fernet-key
+        - name: POSTGRES_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: airflow-secrets
+              key: postgres-password
+        volumeMounts:
+        - name: airflow-dags
+          mountPath: /opt/airflow/dags
+        - name: airflow-logs
+          mountPath: /opt/airflow/logs
+        - name: airflow-config
+          mountPath: /opt/airflow/airflow.cfg
+          subPath: airflow.cfg
+        command: ["bash", "-c"]
+        args:
+          - airflow celery worker
+        livenessProbe:
+          exec:
+            command:
+            - sh
+            - -c
+            - airflow celery inspect ping -d celery@$(hostname)
+          initialDelaySeconds: 60
+          periodSeconds: 30
+        resources:
+          requests:
+            memory: "2Gi"
+            cpu: "1000m"
+          limits:
+            memory: "4Gi"
+            cpu: "2000m"
+      volumes:
+      - name: airflow-dags
+        persistentVolumeClaim:
+          claimName: airflow-dags-pvc
+      - name: airflow-logs
+        emptyDir: {}
+      - name: airflow-config
+        configMap:
+          name: airflow-config
+---
+# Airflow Flower (Celery Monitoring)
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: airflow-flower
+  namespace: data-pipeline
+  labels:
+    app: airflow-flower
+    component: monitoring
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: airflow-flower
+  template:
+    metadata:
+      labels:
+        app: airflow-flower
+    spec:
+      containers:
+      - name: flower
+        image: apache/airflow:2.7.1-python3.9
+        ports:
+        - containerPort: 5555
+        env:
+        - name: AIRFLOW__CELERY__BROKER_URL
+          value: redis://airflow-redis:6379/0
+        command: ["bash", "-c"]
+        args:
+          - airflow celery flower
+        resources:
+          requests:
+            memory: "512Mi"
+            cpu: "250m"
+          limits:
+            memory: "1Gi"
+            cpu: "500m"
+---
+# Airflow DAGs Persistent Volume
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: airflow-dags-pvc
+  namespace: data-pipeline
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 10Gi
+  storageClassName: standard

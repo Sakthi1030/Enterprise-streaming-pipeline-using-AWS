@@ -1,0 +1,89 @@
+---
+# Airflow Webserver Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: airflow-webserver
+  namespace: data-pipeline
+  labels:
+    app: airflow-webserver
+    component: webserver
+spec:
+  type: LoadBalancer
+  ports:
+  - name: http
+    port: 80
+    targetPort: 8080
+    protocol: TCP
+  - name: health
+    port: 8080
+    targetPort: 8080
+    protocol: TCP
+  selector:
+    app: airflow-webserver
+  externalTrafficPolicy: Local
+---
+# Airflow Flower Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: airflow-flower
+  namespace: data-pipeline
+  labels:
+    app: airflow-flower
+    component: monitoring
+spec:
+  type: ClusterIP
+  ports:
+  - name: http
+    port: 5555
+    targetPort: 5555
+    protocol: TCP
+  selector:
+    app: airflow-flower
+---
+# Airflow Ingress (if using ingress controller)
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: airflow-ingress
+  namespace: data-pipeline
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/proxy-body-size: "50m"
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: airflow.your-domain.com
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: airflow-webserver
+            port:
+              number: 80
+  - host: flower.your-domain.com
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: airflow-flower
+            port:
+              number: 5555
+---
+# Secrets for Airflow (Example - In production, use proper secret management)
+apiVersion: v1
+kind: Secret
+metadata:
+  name: airflow-secrets
+  namespace: data-pipeline
+type: Opaque
+data:
+  postgres-password: cGFzc3dvcmQxMjM=  # password123 in base64
+  admin-password: YWRtaW4xMjM=        # admin123 in base64
+  fernet-key: b2hLVk05S1VvdjFlM2h3N0RMRTVJalJ1dHZBSmxTNHI=  # Generated fernet key

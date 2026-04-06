@@ -1,0 +1,533 @@
+---
+# Agentic AI ConfigMap
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: agentic-ai-config
+  namespace: ai-agents
+data:
+  config.yaml: |
+    # Agent Configuration
+    agents:
+      root_agent:
+        enabled: true
+        model_name: "gpt-4"
+        temperature: 0.2
+        max_workers: 10
+        
+      sales_agent:
+        enabled: true
+        roles: ["performance_analyst", "customer_insights", "revenue_optimization", "forecasting"]
+        
+      marketing_agent:
+        enabled: true
+        roles: ["campaign_analyst", "customer_acquisition", "roi_optimization", "content_strategy"]
+        
+      anomaly_agent:
+        enabled: true
+        alert_threshold: 0.8
+        monitoring_interval: 5
+    
+    # API Configuration
+    api:
+      host: "0.0.0.0"
+      port: 8000
+      workers: 4
+      timeout: 300
+      max_requests: 10000
+      
+    # Database Configuration
+    database:
+      type: "postgresql"
+      host: "agentic-db.ai-agents.svc.cluster.local"
+      port: 5432
+      name: "agentic_db"
+      pool_size: 20
+      
+    # Redis Configuration
+    redis:
+      host: "agentic-redis.ai-agents.svc.cluster.local"
+      port: 6379
+      db: 0
+      
+    # Monitoring
+    monitoring:
+      enabled: true
+      prometheus_port: 8001
+      metrics_interval: 30
+      
+    # Logging
+    logging:
+      level: "INFO"
+      format: "json"
+      output: "stdout"
+---
+# Agentic AI Database (PostgreSQL)
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: agentic-db-pvc
+  namespace: ai-agents
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 50Gi
+  storageClassName: standard
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: agentic-db
+  namespace: ai-agents
+  labels:
+    app: agentic-db
+    component: database
+spec:
+  serviceName: agentic-db
+  replicas: 1
+  selector:
+    matchLabels:
+      app: agentic-db
+  template:
+    metadata:
+      labels:
+        app: agentic-db
+    spec:
+      containers:
+      - name: postgres
+        image: postgres:15-alpine
+        ports:
+        - containerPort: 5432
+        env:
+        - name: POSTGRES_DB
+          value: agentic_db
+        - name: POSTGRES_USER
+          value: agentic_user
+        - name: POSTGRES_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: agentic-secrets
+              key: db-password
+        volumeMounts:
+        - name: postgres-data
+          mountPath: /var/lib/postgresql/data
+        - name: init-scripts
+          mountPath: /docker-entrypoint-initdb.d
+        resources:
+          requests:
+            memory: "2Gi"
+            cpu: "1000m"
+          limits:
+            memory: "4Gi"
+            cpu: "2000m"
+        livenessProbe:
+          exec:
+            command:
+            - pg_isready
+            - -U
+            - agentic_user
+          initialDelaySeconds: 60
+          periodSeconds: 30
+        readinessProbe:
+          exec:
+            command:
+            - pg_isready
+            - -U
+            - agentic_user
+          initialDelaySeconds: 30
+          periodSeconds: 10
+      volumes:
+      - name: postgres-data
+        persistentVolumeClaim:
+          claimName: agentic-db-pvc
+      - name: init-scripts
+        configMap:
+          name: agentic-db-init
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: agentic-db-init
+  namespace: ai-agents
+data:
+  01-init.sql: |
+    CREATE DATABASE IF NOT EXISTS agentic_db;
+    CREATE USER IF NOT EXISTS agentic_user WITH ENCRYPTED PASSWORD 'placeholder';
+    GRANT ALL PRIVILEGES ON DATABASE agentic_db TO agentic_user;
+    
+    \c agentic_db;
+    
+    -- Create tables for agent memory and sessions
+    CREATE TABLE IF NOT EXISTS agent_sessions (
+        session_id VARCHAR(255) PRIMARY KEY,
+        user_id VARCHAR(255) NOT NULL,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        last_activity TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        context JSONB,
+        metadata JSONB
+    );
+    
+    CREATE TABLE IF NOT EXISTS agent_memory (
+        memory_id VARCHAR(255) PRIMARY KEY,
+        agent_id VARCHAR(255) NOT NULL,
+        session_id VARCHAR(255),
+        memory_type VARCHAR(50) NOT NULL,
+        content TEXT NOT NULL,
+        embedding_vector BYTEA,
+        metadata JSONB,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        INDEX idx_agent_id (agent_id),
+        INDEX idx_session_id (session_id),
+        INDEX idx_memory_type (memory_type)
+    );
+    
+    CREATE TABLE IF NOT EXISTS request_history (
+        request_id VARCHAR(255) PRIMARY KEY,
+        session_id VARCHAR(255),
+        user_id VARCHAR(255) NOT NULL,
+        query TEXT NOT NULL,
+        response TEXT,
+        agents_involved JSONB,
+        processing_time FLOAT,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        INDEX idx_user_id (user_id),
+        INDEX idx_created_at (created_at)
+    );
+    
+    CREATE TABLE IF NOT EXISTS agent_insights (
+        insight_id VARCHAR(255) PRIMARY KEY,
+        agent_id VARCHAR(255) NOT NULL,
+        insight_type VARCHAR(100) NOT NULL,
+        content JSONB NOT NULL,
+        confidence FLOAT,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        INDEX idx_agent_id (agent_id),
+        INDEX idx_insight_type (insight_type)
+    );
+---
+# Agentic AI Redis
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: agentic-redis
+  namespace: ai-agents
+  labels:
+    app: agentic-redis
+    component: cache
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: agentic-redis
+  template:
+    metadata:
+      labels:
+        app: agentic-redis
+    spec:
+      containers:
+      - name: redis
+        image: redis:7-alpine
+        ports:
+        - containerPort: 6379
+        command: ["redis-server", "--appendonly", "yes", "--cluster-enabled", "yes"]
+        volumeMounts:
+        - name: redis-data
+          mountPath: /data
+        resources:
+          requests:
+            memory: "1Gi"
+            cpu: "500m"
+          limits:
+            memory: "2Gi"
+            cpu: "1000m"
+        livenessProbe:
+          exec:
+            command:
+            - redis-cli
+            - ping
+          initialDelaySeconds: 30
+          periodSeconds: 30
+        readinessProbe:
+          exec:
+            command:
+            - redis-cli
+            - ping
+          initialDelaySeconds: 5
+          periodSeconds: 10
+      volumes:
+      - name: redis-data
+        emptyDir: {}
+---
+# Agentic AI Main Application
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: agentic-ai
+  namespace: ai-agents
+  labels:
+    app: agentic-ai
+    component: api
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: agentic-ai
+  template:
+    metadata:
+      labels:
+        app: agentic-ai
+        version: "1.0.0"
+    spec:
+      initContainers:
+      - name: wait-for-db
+        image: busybox:1.28
+        command: ['sh', '-c', 'until nc -z agentic-db 5432; do echo waiting for database; sleep 2; done;']
+      - name: wait-for-redis
+        image: busybox:1.28
+        command: ['sh', '-c', 'until nc -z agentic-redis 6379; do echo waiting for redis; sleep 2; done;']
+      - name: init-db
+        image: agentic-ai:latest
+        command: ["python", "-m", "scripts.init_db"]
+        env:
+        - name: DATABASE_URL
+          value: "postgresql://agentic_user:${DB_PASSWORD}@agentic-db:5432/agentic_db"
+        - name: DB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: agentic-secrets
+              key: db-password
+      containers:
+      - name: api
+        image: agentic-ai:latest
+        ports:
+        - containerPort: 8000
+        - containerPort: 8001  # For metrics
+        env:
+        - name: ENVIRONMENT
+          value: "production"
+        - name: DATABASE_URL
+          value: "postgresql://agentic_user:${DB_PASSWORD}@agentic-db:5432/agentic_db"
+        - name: REDIS_URL
+          value: "redis://agentic-redis:6379/0"
+        - name: OPENAI_API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: agentic-secrets
+              key: openai-api-key
+        - name: SNOWFLAKE_ACCOUNT
+          valueFrom:
+            secretKeyRef:
+              name: agentic-secrets
+              key: snowflake-account
+        - name: SNOWFLAKE_USER
+          valueFrom:
+            secretKeyRef:
+              name: agentic-secrets
+              key: snowflake-user
+        - name: SNOWFLAKE_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: agentic-secrets
+              key: snowflake-password
+        - name: DB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: agentic-secrets
+              key: db-password
+        volumeMounts:
+        - name: config-volume
+          mountPath: /app/config
+        - name: models-volume
+          mountPath: /app/models
+        - name: logs-volume
+          mountPath: /app/logs
+        command: ["uvicorn", "api.main:app", "--host", "0.0.0.0", "--port", "8000", "--workers", "4"]
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8000
+          initialDelaySeconds: 60
+          periodSeconds: 30
+          timeoutSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 8000
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          timeoutSeconds: 5
+        resources:
+          requests:
+            memory: "4Gi"
+            cpu: "2000m"
+          limits:
+            memory: "8Gi"
+            cpu: "4000m"
+      - name: metrics-exporter
+        image: agentic-ai:latest
+        ports:
+        - containerPort: 8001
+        command: ["python", "-m", "scripts.metrics_exporter"]
+        resources:
+          requests:
+            memory: "512Mi"
+            cpu: "250m"
+          limits:
+            memory: "1Gi"
+            cpu: "500m"
+      volumes:
+      - name: config-volume
+        configMap:
+          name: agentic-ai-config
+      - name: models-volume
+        persistentVolumeClaim:
+          claimName: agentic-models-pvc
+      - name: logs-volume
+        emptyDir: {}
+---
+# Models Persistent Volume
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: agentic-models-pvc
+  namespace: ai-agents
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 100Gi
+  storageClassName: standard
+---
+# Celery Worker for Async Tasks
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: agentic-worker
+  namespace: ai-agents
+  labels:
+    app: agentic-worker
+    component: worker
+spec:
+  replicas: 5
+  selector:
+    matchLabels:
+      app: agentic-worker
+  template:
+    metadata:
+      labels:
+        app: agentic-worker
+    spec:
+      initContainers:
+      - name: wait-for-db
+        image: busybox:1.28
+        command: ['sh', '-c', 'until nc -z agentic-db 5432; do echo waiting for database; sleep 2; done;']
+      - name: wait-for-redis
+        image: busybox:1.28
+        command: ['sh', '-c', 'until nc -z agentic-redis 6379; do echo waiting for redis; sleep 2; done;']
+      containers:
+      - name: worker
+        image: agentic-ai:latest
+        env:
+        - name: ENVIRONMENT
+          value: "production"
+        - name: DATABASE_URL
+          value: "postgresql://agentic_user:${DB_PASSWORD}@agentic-db:5432/agentic_db"
+        - name: REDIS_URL
+          value: "redis://agentic-redis:6379/0"
+        - name: OPENAI_API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: agentic-secrets
+              key: openai-api-key
+        - name: DB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: agentic-secrets
+              key: db-password
+        volumeMounts:
+        - name: config-volume
+          mountPath: /app/config
+        - name: models-volume
+          mountPath: /app/models
+        - name: logs-volume
+          mountPath: /app/logs
+        command: ["celery", "-A", "workers.tasks", "worker", "--loglevel=info", "--concurrency=4"]
+        resources:
+          requests:
+            memory: "4Gi"
+            cpu: "2000m"
+          limits:
+            memory: "8Gi"
+            cpu: "4000m"
+        livenessProbe:
+          exec:
+            command:
+            - celery
+            - -A
+            - workers.tasks
+            - inspect
+            - ping
+          initialDelaySeconds: 60
+          periodSeconds: 30
+      volumes:
+      - name: config-volume
+        configMap:
+          name: agentic-ai-config
+      - name: models-volume
+        persistentVolumeClaim:
+          claimName: agentic-models-pvc
+      - name: logs-volume
+        emptyDir: {}
+---
+# Monitoring Agent (for anomaly detection)
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: agentic-monitor
+  namespace: ai-agents
+  labels:
+    app: agentic-monitor
+    component: monitoring
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: agentic-monitor
+  template:
+    metadata:
+      labels:
+        app: agentic-monitor
+    spec:
+      containers:
+      - name: monitor
+        image: agentic-ai:latest
+        env:
+        - name: ENVIRONMENT
+          value: "production"
+        - name: DATABASE_URL
+          value: "postgresql://agentic_user:${DB_PASSWORD}@agentic-db:5432/agentic_db"
+        - name: REDIS_URL
+          value: "redis://agentic-redis:6379/0"
+        - name: DB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: agentic-secrets
+              key: db-password
+        volumeMounts:
+        - name: config-volume
+          mountPath: /app/config
+        command: ["python", "-m", "agents.anomaly_agent", "--monitoring"]
+        resources:
+          requests:
+            memory: "2Gi"
+            cpu: "1000m"
+          limits:
+            memory: "4Gi"
+            cpu: "2000m"
+      volumes:
+      - name: config-volume
+        configMap:
+          name: agentic-ai-config
