@@ -13,6 +13,10 @@ The pipeline consists of 7 phases:
 5. **Agentic AI** - Multi-agent AI system for intelligent analysis
 6. **Kubernetes Deployment** - Container orchestration and monitoring
 7. **Power BI** - Business intelligence dashboards
+<img width="1837" height="904" alt="image" src="https://github.com/user-attachments/assets/61a669f9-fc56-4997-90a8-c5c08cbfd9aa" />
+<img width="1907" height="875" alt="image" src="https://github.com/user-attachments/assets/9b4661c5-ebaa-4565-a816-bf3cfa54485b" />
+
+
 
 ## 🛠️ Tools & Technologies Used
 
