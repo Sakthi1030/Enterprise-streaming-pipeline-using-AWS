@@ -74,7 +74,7 @@ The pipeline consists of 7 phases:
 ## 📁 Project Structure
 
 ```
-real_time_data/
+Enterprise-streaming-pipeline-using-AWS/
 ├── phase_1_aws_infra/          # Terraform IaC and IAM policies
 │   ├── iam/                    # IAM roles and policies
 │   └── terraform/              # AWS resource definitions
